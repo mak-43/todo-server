@@ -30,11 +30,28 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect()
-        const listCollection = client.db('Assignment-11').collection('TaskList')
+        const taskCollection = client.db('ToDoList').collection('TaskList')
        // const itemCollection=client.db("Assignment-11").collection('myitem')
 
+        app.post('/addtask',async(req,res)=>{
+            const task=req.body 
+            const name=req.body.name
+            const result=await taskCollection.insertOne(task) 
+            res.send({result:result,name:name})
+        })
 
-
+        app.get('/alltask',async(req,res)=>{
+            const query={}
+            const cursor=taskCollection.find(query)
+            const alltasks=await cursor.toArray()
+            res.send(alltasks)
+        })
+        app.delete('/delete/:id',async(req,res)=>{
+            const id=req.params.id 
+            const query={_id:ObjectId(id)} 
+            const result= await productCollection.deleteOne(query) 
+            res.send(result)
+        })
       
       
     }
@@ -42,10 +59,9 @@ async function run() {
 
     }
 }
+
+
 run().catch(console.dir)
-
-
-
 app.get('/',(req,res)=>{
     res.send('Running server')
 })
