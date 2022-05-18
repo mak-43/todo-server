@@ -41,11 +41,33 @@ async function run() {
         })
 
         app.get('/alltask',async(req,res)=>{
-            const query={}
+            const email=req.query.email
+            
+            const query={email}
             const cursor=taskCollection.find(query)
             const alltasks=await cursor.toArray()
             res.send(alltasks)
         })
+        // app.get('/myitems',verifyJWT,async(req,res)=>{
+           
+        //     const decodedEmail=req.decoded.email
+
+        //     console.log("decoded email",decodedEmail)
+            
+        //     const email=req.query.email
+        //     console.log("email",email) 
+        //     if(email===decodedEmail){
+        //         const query={email}
+            
+        //         const cursor=productCollection.find(query)
+        //         const myitems=await cursor.toArray() 
+        //         res.send(myitems)
+        //     }
+        //     else{
+        //         res.status(403).send({message:'Forbidden access'})
+        //     }
+
+        // })
         app.delete('/delete/:id',async(req,res)=>{
             const id=req.params.id 
             const query={_id:ObjectId(id)} 
